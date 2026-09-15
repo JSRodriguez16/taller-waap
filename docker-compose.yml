@@ -1,0 +1,20 @@
+# 1. Crear la red y el proyecto
+mkdir taller-waap && cd taller-waap
+# 2. docker-compose.yml (fragmento base)
+version: '3.8'
+services:
+ juice-shop:
+ image: bkimminich/juice-shop
+ ports: ['3000:3000']
+ networks: [lab-net]
+ waap-proxy:
+ image: owasp/modsecurity-crs:nginx
+ ports: ['8080:8080']
+ depends_on: [juice-shop]
+ networks: [lab-net]
+networks:
+ lab-net:
+ driver: bridge
+# 3. Levantar el entorno
+docker compose up -d
+docker compose ps

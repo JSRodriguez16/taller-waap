@@ -1,0 +1,36 @@
+# .github/workflows/devsecops.yml
+name: devsecops-pipeline
+on: [push, pull_request]
+jobs:
+ security-gate:
+ runs-on: ubuntu-latest
+ steps:
+ - uses: actions/checkout@v4
+ - name: SAST - Semgrep
+ run: |
+ pip install semgrep
+ semgrep --config=p/owasp-top-ten app/ --error
+ - name: SCA - pip-audit
+ run: |
+ pip install pip-audit
+ pip-audit -r app/requirements.txt
+ - name: Build de la imagen de la aplicacion
+ run: docker build -t taller-waap/app:${{ github.sha }} ./app
+ - name: Container scan - Trivy
+ uses: aquasecurity/trivy-action@master
+ with:
+ image-ref: 'taller-waap/app:${{ github.sha }}'
+ severity: 'CRITICAL,HIGH'
+ exit-code: '1'
+ - name: IaC scan - Checkov
+ uses: bridgecrewio/checkov-action@master
+ with:
+ directory: .
+ quiet: true
+ - name: DAST - OWASP ZAP baseline
+ uses: zaproxy/action-baseline@v0.12.0
+ with:
+ target: 'http://localhost:8080'
+ - name: Despliegue de reglas WAAP (solo si todo pasa)
+ if: success()
+ run: ./scripts/deploy_waap_rules.sh
