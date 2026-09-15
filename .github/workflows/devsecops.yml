@@ -26,12 +26,14 @@ jobs:
       - name: SAST - Semgrep
         run: |
           pip install semgrep
+          # Escanea patrones inseguros con reglas OWASP Top 10
           semgrep --config=p/owasp-top-ten app/ --error
 
       # 2. SCA - Software Composition Analysis
       - name: SCA - pip-audit
         run: |
           pip install pip-audit
+          # Analiza vulnerabilidades conocidas (CVE) en dependencias
           pip-audit -r app/requirements.txt
 
       # 3. Construcción de Contenedor
@@ -67,6 +69,7 @@ jobs:
         uses: zaproxy/action-baseline@v0.12.0
         with:
           target: 'http://localhost:3000'
+          rules: 'zap-baseline.conf'
           fail_action: false
 
       # 7. Despliegue de Reglas WAAP (Policy as Code)
@@ -75,3 +78,4 @@ jobs:
         run: |
           chmod +x ./scripts/deploy_waap_rules.sh
           ./scripts/deploy_waap_rules.sh
+

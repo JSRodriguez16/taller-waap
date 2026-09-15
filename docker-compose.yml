@@ -1,20 +1,49 @@
-# 1. Crear la red y el proyecto
-mkdir taller-waap && cd taller-waap
-# 2. docker-compose.yml (fragmento base)
-version: '3.8'
 services:
- juice-shop:
- image: bkimminich/juice-shop
- ports: ['3000:3000']
- networks: [lab-net]
- waap-proxy:
- image: owasp/modsecurity-crs:nginx
- ports: ['8080:8080']
- depends_on: [juice-shop]
- networks: [lab-net]
+  juice-shop:
+    image: bkimminich/juice-shop
+    container_name: juice-shop
+    ports:
+      - '3000:3000'
+    networks:
+      - lab-net
+    restart: unless-stopped
+
+  rasp-app:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    container_name: rasp-app
+    ports:
+      - '5000:5000'
+    environment:
+      - FLASK_ENV=production
+      - RASP_ENABLED=true
+    networks:
+      - lab-net
+    restart: unless-stopped
+
+  waap-proxy:
+    image: owasp/modsecurity-crs:nginx
+    container_name: waap-proxy
+    ports:
+      - '8080:8080'
+    environment:
+      - BACKEND=http://juice-shop:3000
+      - PORT=8080
+      - PARANOIA=1
+      - ANOMALY_INBOUND=5
+      - ANOMALY_OUTBOUND=4
+      - BLOCKING_PARANOIA=1
+    depends_on:
+      - juice-shop
+      - rasp-app
+    networks:
+      - lab-net
+    volumes:
+      - ./logs:/var/log/modsecurity
+    restart: unless-stopped
+
 networks:
- lab-net:
- driver: bridge
-# 3. Levantar el entorno
-docker compose up -d
-docker compose ps
+  lab-net:
+    name: lab-net
+    driver: bridge

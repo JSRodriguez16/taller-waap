@@ -1,0 +1,6 @@
+Payload / técnica,Bloqueado por reglas (Fase 2),Detectado por IA/ML (Fase 3),Bloqueado por RASP (Fase 4),Score_IA,Detalle
+SQLi clásico ' OR '1'='1,Sí,Sí,Sí,-0.051,Inyección SQL tradicional en un solo parámetro
+SQLi con codificación URL,No,Sí,Sí,-0.0515,"Evasión por codificación percent-encoding (%27, %20, %3D)"
+SQLi fragmentado en 2 parámetros,No,Sí,Sí,-0.0523,"Carga maliciosa dividida; los parámetros individuales no forman SQLi completo, pero se unen en backend"
+XSS reflejado básico,Sí,Sí,Sí,-0.0463,Inyección de script del lado del cliente
+Ráfaga de peticiones (bot),No,Sí,N/A,-0.004,Ataque volumétrico de bots o fuerza bruta / fuzzing automatizado
