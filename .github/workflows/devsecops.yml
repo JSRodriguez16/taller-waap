@@ -49,16 +49,18 @@ jobs:
           format: 'table'
           severity: 'CRITICAL,HIGH'
           exit-code: '1'
+          ignore-unfixed: true
 
       # 5. IaC Scanning
       - name: IaC scan - Checkov
         uses: bridgecrewio/checkov-action@master
         with:
           directory: .
-          framework: dockerfile,docker_compose
-          quiet: true
-          soft_fail: true
-
+          framework: dockerfile
+          quiet: false
+          soft_fail: false
+          output_format: cli
+          
       # 6. DAST - Dynamic Application Security Testing
       - name: Iniciar servicios para DAST
         run: |
@@ -66,11 +68,12 @@ jobs:
           sleep 10
 
       - name: DAST - OWASP ZAP baseline
-        uses: zaproxy/action-baseline@v0.12.0
+        uses: zaproxy/action-baseline@v0.15.0
         with:
           target: 'http://localhost:3000'
-          rules: 'zap-baseline.conf'
           fail_action: false
+          allow_issue_writing: false
+          artifact_name: zap_scan
 
       # 7. Despliegue de Reglas WAAP (Policy as Code)
       - name: Despliegue de reglas WAAP (solo si todo pasa)

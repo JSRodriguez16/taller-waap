@@ -6,8 +6,9 @@ RUN groupadd -r appuser && useradd -r -g appuser appuser
 WORKDIR /app
 
 # Instalar dependencias
+RUN python -m pip install --no-cache-dir --upgrade "setuptools==84.0.0"
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN python -m pip install --no-cache-dir -r requirements.txt
 
 # Copiar código fuente
 COPY . .
