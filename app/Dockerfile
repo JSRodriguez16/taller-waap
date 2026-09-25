@@ -1,7 +1,4 @@
 FROM python:3.11-slim
-# Se fija a Debian 12 "bookworm" en vez de la base por defecto (Debian 13 "trixie")
-# porque trixie tenía 42 CVEs HIGH sin parche aún; bookworm es una versión LTS
-# más madura con más vulnerabilidades ya corregidas (hallazgo de Trivy en Fase 5).
 
 # Crear usuario sin privilegios para pasar escaneo de seguridad Checkov/Trivy
 RUN groupadd -r appuser && useradd -r -g appuser appuser
@@ -9,8 +6,9 @@ RUN groupadd -r appuser && useradd -r -g appuser appuser
 WORKDIR /app
 
 # Instalar dependencias
+RUN python -m pip install --no-cache-dir --upgrade "setuptools==84.0.0"
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN python -m pip install --no-cache-dir -r requirements.txt
 
 # Copiar código fuente
 COPY . .
