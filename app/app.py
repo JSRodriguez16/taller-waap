@@ -100,24 +100,24 @@ def login():
 @app.route('/rest/products/search', methods=['GET'])
 def search():
     """
-    Endpoint de Búsqueda vulnerable a XSS reflejado y SQLi.
+    Búsqueda con salida HTML escapada.
+    Conserva la construcción de consultas del laboratorio RASP.
     """
     q = request.args.get('q', '')
-    
+
     # Interceptado por RASP
     query = build_search_query(q)
     logger.info("Búsqueda ejecutada: %s", query)
 
-    # Render reflejado simple para XSS
-    html_template = f"""
+    html_template = """
     <html>
       <body>
-        <h2>Resultados para: {q}</h2>
+        <h2>Resultados para: {{ q }}</h2>
         <p>No se encontraron productos coincidentes.</p>
       </body>
     </html>
     """
-    return html_template, 200
+    return render_template_string(html_template, q=q), 200
 
 @app.route('/rasp/toggle', methods=['POST'])
 def toggle_rasp():
@@ -136,5 +136,5 @@ def rasp_status():
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port, debug=False)
+    app.run(host='127.0.0.1', port=port, debug=False)
 
