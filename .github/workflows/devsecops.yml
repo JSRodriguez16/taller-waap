@@ -71,8 +71,9 @@ jobs:
         uses: zaproxy/action-baseline@v0.12.0
         with:
           target: 'http://localhost:3000'
-          rules: 'zap-baseline.conf'
           fail_action: false
+          allow_issue_writing: false
+          artifact_name: zap_scan
 
       # 7. Despliegue de Reglas WAAP (Policy as Code)
       - name: Despliegue de reglas WAAP (solo si todo pasa)
