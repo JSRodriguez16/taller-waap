@@ -56,10 +56,11 @@ jobs:
         uses: bridgecrewio/checkov-action@master
         with:
           directory: .
-          framework: dockerfile,docker_compose
-          quiet: true
-          soft_fail: true
-
+          framework: dockerfile
+          quiet: false
+          soft_fail: false
+          output_format: cli
+          
       # 6. DAST - Dynamic Application Security Testing
       - name: Iniciar servicios para DAST
         run: |
