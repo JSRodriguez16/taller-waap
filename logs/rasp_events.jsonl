@@ -6,3 +6,6 @@
 {"timestamp": "2026-09-15T21:38:36.688986Z", "component": "RASP", "event_type": "SQL_INJECTION_DETECTED", "details": "SELECT * FROM users WHERE user='' OR '1'='1' AND pass='any'", "blocked": true, "client_ip": "internal"}
 {"timestamp": "2026-09-15T21:38:36.727408Z", "component": "RASP", "event_type": "SQL_INJECTION_DETECTED", "details": "SELECT * FROM users WHERE user='' OR '' AND pass='1=1 --'", "blocked": true, "client_ip": "internal"}
 {"timestamp": "2026-09-15T21:39:01.580704Z", "component": "RASP", "event_type": "SQL_INJECTION_DETECTED", "details": "SELECT * FROM users WHERE user='cliente_normal' AND pass='clave_segura_123'", "blocked": true, "client_ip": "internal"}
+{"timestamp": "2026-09-26T00:18:02.924495Z", "component": "RASP", "event_type": "SQL_INJECTION_DETECTED", "details": "SELECT * FROM users WHERE user='' OR '1'='1' AND pass='any'", "blocked": true, "client_ip": "internal"}
+{"timestamp": "2026-09-26T00:18:02.956465Z", "component": "RASP", "event_type": "SQL_INJECTION_DETECTED", "details": "SELECT * FROM users WHERE user='' OR '1'='1' AND pass='any'", "blocked": true, "client_ip": "internal"}
+{"timestamp": "2026-09-26T00:18:02.986356Z", "component": "RASP", "event_type": "SQL_INJECTION_DETECTED", "details": "SELECT * FROM users WHERE user='' OR '' AND pass='1=1 --'", "blocked": true, "client_ip": "internal"}
